@@ -1,11 +1,11 @@
 from selenium import webdriver
-import unittest
 from selenium.webdriver.common.keys import Keys
 import time
 from selenium.webdriver.common.by import By
+from django.test import LiveServerTestCase
 
 
-class NewVisitorTest(unittest.TestCase):
+class NewVisitorTest(LiveServerTestCase):
     def setUp(self): self.browser = webdriver.Chrome()
 
     def tearDown(self): self.browser.quit()
@@ -16,13 +16,14 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn(row_text, [row.text for row in rows])
 
     def test_can_start_a_list_and_retrieve_it_later(self):
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         self.assertIn('To-Do', self.browser.title)
         header_text = self.browser.find_element(By.TAG_NAME, 'h1').text
         self.assertIn('To-Do', header_text)
 
         inputbox = self.browser.find_element(By.ID, 'id_new_item')
-        inputbox.send_keys('Give a gift to Lisi')
+        inputbox.send_keys('Buy flowers')
+
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
         self.check_for_row_in_list_table('1: Buy flowers')
@@ -35,10 +36,6 @@ class NewVisitorTest(unittest.TestCase):
         self.check_for_row_in_list_table('1: Buy flowers')
         self.check_for_row_in_list_table('2: Give a gift to Lisi')
 
-
-
         self.fail('Finish the test!')
 
 
-if __name__ == '__main__':
-    unittest.main()
