@@ -116,4 +116,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
             512,
             delta=10)
 # if __name__ == '__main__':
-#11
